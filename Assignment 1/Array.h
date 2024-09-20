@@ -9,11 +9,12 @@ template <typename T>
 class Array {
 public:
 	inline Array(int size, int growBy = 1) :
-	m_array(NULL), m_maxSize(0), m_growSize(0), m_numElements(0) {
-		if (size > 0) {
+		m_maxSize(0), m_growSize(0), m_numElements(0) {
+		m_array = nullptr;
+		if (size > -1) {
 			m_maxSize = size;
 			m_array = new T[m_maxSize];
-			memset(m_array, 0, m_maxSize * sizeof(T));
+			memset(m_array, 0, sizeof(T) * m_maxSize);
 
 			m_growSize = growBy > 0 ? growBy : 0;
 		}
@@ -38,8 +39,9 @@ public:
 			return;
 		}
 
-		for (int i = index; i < m_numElements - 1; i++) {
-			m_array[i] = m_array[i + 1];
+		for (int i = index; i < m_numElements; i++) {
+			if (i + 1 < m_numElements)
+				m_array[i] = m_array[i + 1];
 		}
 
 		m_numElements--;
@@ -57,14 +59,47 @@ public:
 	inline int getGrowSize() { return m_growSize; }
 	inline void setGrowSize(int growBy) { m_growSize = growBy > 0 ? growBy : 0; }
 
+	inline friend std::ostream& operator<<(std::ostream& os, const Array<T>& a) {
+		os << "Elements: ";
+		
+		for (int i = 0; i < a.m_numElements; i++) {
+			os << a.m_array[i] << " ";
+		}
+
+		os << std::endl;
+
+		os << "Current Size: " << a.m_numElements << std::endl 
+			<< "Max Size: " << a.m_maxSize << std::endl
+			<< "Grow Size: " << a.m_growSize << std::endl;
+
+		return os;
+	}
+
 protected:
 	T* m_array;
 
 	int m_maxSize;
-	int m_growSize;
 	int m_numElements;
+	int m_growSize;
 
-	inline void expand() {
+	virtual bool expand() {
+		if (m_growSize <= 0) return false;
 
+		T* temp = new T[m_maxSize + m_growSize];
+		assert(temp != nullptr);
+
+		memcpy(temp, m_array, sizeof(T) * m_maxSize);
+
+		delete[] m_array;
+
+		m_array = temp;
+		temp = nullptr;
+
+		m_maxSize += m_growSize;
+		m_growSize <<= 1; // double expansion size each time
+
+		return true;
 	}
+
+
 };

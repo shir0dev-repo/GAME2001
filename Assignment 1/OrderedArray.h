@@ -12,26 +12,21 @@ public:
 	inline virtual void push(T value) override {
 		NULLCHECK(this->m_array);
 
-		const int duplicateIndex = find(value);
+		if (!this->m_allowDuplicates && find(value) != -1) {
+			std::cout << "Duplicate data prevented: " << value << std::endl;
+			return;
+		}
+
+		if (this->m_numElements >= this->m_maxSize)
+			this->expand();
+
 		int i, k;
 
-		if (duplicateIndex != -1) {
-			if (!m_allowDuplicates) {
-				std::cout << "Duplicate data prevented." << std::endl;
-				return;
-			}
-			else {
-				if (this->m_numElements >= this->m_maxSize)
-					this->expand();
-
-				i = duplicateIndex;
-			}
+		
+		for (i = 0; i < this->m_numElements; i++) {
+			if (this->m_array[i] > value) break;
 		}
-		else {
-			for (i = 0; i < this->m_numElements; i++) {
-				if (this->m_array[i] > value) break;
-			}
-		}
+		
 
 		for (k = this->m_numElements; k > i; k--) {
 			this->m_array[k] = this->m_array[k - 1];
@@ -42,7 +37,8 @@ public:
 	}
 
 	inline virtual void pop() override {
-
+		if (this->m_numElements > 0)
+			this->m_numElements--;
 	}
 
 	inline virtual int find(T searchKey) const override {
