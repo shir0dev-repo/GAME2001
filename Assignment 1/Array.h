@@ -45,6 +45,8 @@ public:
 			return;
 		}
 
+		std::cout << "Removed " << m_array[index] << " at index " << index << '.' << std::endl;
+
 		for (int i = index; i < m_numElements; i++) {
 			if (i + 1 < m_numElements)
 				m_array[i] = m_array[i + 1];
@@ -95,6 +97,8 @@ protected:
 	virtual bool expand() {
 		if (m_growSize <= 0) return false;
 
+		std::cout << "Expanding...";
+
 		T* temp = new T[m_maxSize + m_growSize];
 		assert(temp != nullptr);
 
@@ -106,6 +110,8 @@ protected:
 		temp = nullptr;
 
 		m_maxSize += m_growSize;
+		std::cout << " Expanded by " << m_growSize << '.'  << std::endl;
+
 		m_growSize <<= 1; // double expansion size each time
 
 		return true;

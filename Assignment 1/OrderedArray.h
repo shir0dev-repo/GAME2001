@@ -7,13 +7,18 @@ class OrderedArray : public Array<T> {
 public:
 	inline OrderedArray(bool allowDuplicates, int size, int growBy = 1) : Array<T>(size, growBy) {
 		m_allowDuplicates = allowDuplicates;
+
+		std::cout << "Created new OrderedArray<" << typeid(T).name() << ">"
+			<< " with initial size of " << size
+			<< " and growth value of " << growBy << ". Duplicates are " << (allowDuplicates ? "allowed." : "not allowed.")
+			<< std::endl << std::endl;
 	}
 
 	inline virtual void push(T value) override {
 		NULLCHECK(this->m_array);
 
 		if (!this->m_allowDuplicates && find(value) != -1) {
-			std::cout << "Duplicate data prevented: " << value << std::endl;
+			std::cout << "Duplicate entry prevented: " << value << std::endl;
 			return;
 		}
 
@@ -45,6 +50,7 @@ public:
 			current = (lowerBound + upperBound) >> 1;
 
 			if (this->m_array[current] == searchKey) {
+				std::cout << "Found " << searchKey << " at index " << current << '.' << std::endl;
 				return current;
 			}
 			else if (lowerBound > upperBound) {
@@ -66,6 +72,7 @@ public:
 
 	inline void allowDuplicates(bool allowed, bool removeExisting = false) { 
 		m_allowDuplicates = allowed; 
+		std::cout << "Duplicates are " << (allowed ? "now allowed." : "no longer allowed.") << std::endl;
 		if (!allowed && removeExisting) removeDuplicates();
 	}
 
@@ -74,8 +81,8 @@ private:
 
 	void removeDuplicates() {
 		int removeCounter = 0;
-		for (int i = 1; i < this->m_numElements - 1; i++) {
-			if (this->m_array[i] == this->m_array[i - 1] || this->m_array[i] == this->m_array[i + 1]) {
+		for (int i = this->m_numElements - 1; i > 0; i--) {
+			if (this->m_array[i] == this->m_array[i - 1]) {
 				this->remove(i);
 				removeCounter++;
 			}
