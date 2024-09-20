@@ -1,32 +1,47 @@
 #include <iostream>
 
 #include "OrderedArray.h"
+#include "UnorderedArray.h"
 
-int main()
-{
-    OrderedArray<int> orderedArray(true, 1, 2);
-    orderedArray.push(4);
-    orderedArray.push(20);
-    orderedArray.push(1337);
-    orderedArray.push(20);
+int main() {
+#pragma region UnorderedArray Demo
+    std::cout << "UNORDERED: " << std::endl << std::endl;
 
-    orderedArray.push(42);
-    orderedArray.push(73);
-    orderedArray.push(21);
-    orderedArray.push(1337);
+    UnorderedArray<int> unorderedArray(1, 1); // size: 1, grow: 1, 
+    unorderedArray.push(21); // size: 1, grow: 1
+    unorderedArray.push(9);  // size: 2, grow: 2
+    unorderedArray.push(10); // size: 3, grow: 4
+    unorderedArray.push(21); 
+    unorderedArray.push(42); // size: 5, grow: 8
 
-    std::cout << orderedArray;
+    std::cout << unorderedArray << std::endl;
 
-    // removes both 1337's
-    orderedArray.pop();
-    orderedArray.pop();
+    int index = unorderedArray.find(10); // returns 2
+    unorderedArray.remove(index); // removes 10
+    unorderedArray.pop(); // removes 42
+    unorderedArray.push(1);
 
-    // removes 73
-    orderedArray.remove(5);
+    std::cout << unorderedArray << std::endl << std::endl;
+#pragma endregion
 
-    std::cout << orderedArray;
+#pragma region OrderedArrayDemo
+    std::cout << "Ordered: " << std::endl;
+
+    // creates new OrderedArray from unordered one. will remove 21
+    OrderedArray<int> oa = unorderedArray.sort(false); // size: 3, grow: 8
+    std::cout << oa << std::endl;
+
+    oa.push(25);
+    oa.push(22);
+    oa.push(26);
+    oa.allowDuplicates(true); // duplicates are now allowed.
+    oa.push(21);
+    oa.push(21);
     
+    std::cout << oa << std::endl;
+    
+    oa.allowDuplicates(false, true); // turns off duplicate data and removes any existing duplicates
 
- /*   std::cout << "Max: " << orderedArray.getMaxSize() << std::endl;
-    std::cout << "Grow: " << orderedArray.getGrowSize() << std::endl;*/
+    std::cout << oa << std::endl; 
+#pragma endregion
 }

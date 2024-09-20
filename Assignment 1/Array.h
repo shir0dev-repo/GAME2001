@@ -9,8 +9,8 @@ template <typename T>
 class Array {
 public:
 	inline Array(int size, int growBy = 1) :
-		m_maxSize(0), m_growSize(0), m_numElements(0) {
-		m_array = nullptr;
+		m_array(nullptr), m_maxSize(0), m_growSize(0), m_numElements(0) {
+		
 		if (size > -1) {
 			m_maxSize = size;
 			m_array = new T[m_maxSize];
@@ -45,6 +45,10 @@ public:
 		}
 
 		m_numElements--;
+	}
+
+	inline void clear() {
+		m_numElements = 0;
 	}
 
 	inline T operator[](int index) {

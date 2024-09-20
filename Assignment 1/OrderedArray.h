@@ -67,6 +67,24 @@ public:
 		}
 	}
 
+	inline bool duplicatesAllowed() { return m_allowDuplicates; }
+
+	inline void allowDuplicates(bool allowed, bool removeExisting = false) { 
+		m_allowDuplicates = allowed; 
+		if (!allowed && removeExisting) removeDuplicates();
+	}
 private:
 	bool m_allowDuplicates;
+
+	void removeDuplicates() {
+		int removeCounter = 0;
+		for (int i = 1; i < this->m_numElements - 1; i++) {
+			if (this->m_array[i] == this->m_array[i - 1] || this->m_array[i] == this->m_array[i + 1]) {
+				this->remove(i);
+				removeCounter++;
+			}
+		}
+
+		std::cout << "Removed " << removeCounter << " duplicate(s)." << std::endl;
+	}
 };
