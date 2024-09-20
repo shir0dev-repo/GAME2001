@@ -36,11 +36,6 @@ public:
 		this->m_numElements++;
 	}
 
-	inline virtual void pop() override {
-		if (this->m_numElements > 0)
-			this->m_numElements--;
-	}
-
 	inline virtual int find(T searchKey) const override {
 		NULLCHECK(this->m_array);
 
@@ -73,6 +68,7 @@ public:
 		m_allowDuplicates = allowed; 
 		if (!allowed && removeExisting) removeDuplicates();
 	}
+
 private:
 	bool m_allowDuplicates;
 

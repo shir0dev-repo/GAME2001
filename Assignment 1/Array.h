@@ -28,13 +28,19 @@ public:
 	}
 
 	virtual void push(T) = 0;
-	virtual void pop() = 0;
 	virtual int find(T) const = 0;
+
+	inline void pop() {
+		if (this->m_numElements > 0) {
+			std::cout << "Popped " << m_array[m_numElements] << '.' << std::endl;
+			this->m_numElements--;
+		}
+	}
 
 	inline void remove(int index) {
 		NULLCHECK(m_array);
 
-		if (index >= m_numElements) {
+		if (index >= m_numElements || index < 0) {
 			std::cout << "Could not remove element at index " << index << std::endl;
 			return;
 		}
